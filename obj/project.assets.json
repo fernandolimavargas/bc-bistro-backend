@@ -872,11 +872,19 @@
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "/Users/fernando/bc-bistro/backend/BCBistroAPI/BCBistroAPI.csproj",
       "projectName": "BCBistroAPI",
       "projectPath": "/Users/fernando/bc-bistro/backend/BCBistroAPI/BCBistroAPI.csproj",
       "packagesPath": "/Users/fernando/.nuget/packages/",
       "outputPath": "/Users/fernando/bc-bistro/backend/BCBistroAPI/obj/",
+=======
+      "projectUniqueName": "/Users/fernando/bc-bistro-backend/BCBistroAPI.csproj",
+      "projectName": "BCBistroAPI",
+      "projectPath": "/Users/fernando/bc-bistro-backend/BCBistroAPI.csproj",
+      "packagesPath": "/Users/fernando/.nuget/packages/",
+      "outputPath": "/Users/fernando/bc-bistro-backend/obj/",
+>>>>>>> b1f616c (Add files via upload)
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/fernando/.nuget/NuGet/NuGet.Config"

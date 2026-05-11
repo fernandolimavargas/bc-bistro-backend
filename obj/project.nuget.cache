@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "K85Ppl8I02s=",
   "success": true,
   "projectFilePath": "/Users/fernando/bc-bistro/backend/BCBistroAPI/BCBistroAPI.csproj",
+=======
+  "dgSpecHash": "cCaVn7jtdOs=",
+  "success": true,
+  "projectFilePath": "/Users/fernando/bc-bistro-backend/BCBistroAPI.csproj",
+>>>>>>> b1f616c (Add files via upload)
   "expectedPackageFiles": [
     "/Users/fernando/.nuget/packages/dapper/2.1.72/dapper.2.1.72.nupkg.sha512",
     "/Users/fernando/.nuget/packages/documentformat.openxml/3.5.1/documentformat.openxml.3.5.1.nupkg.sha512",
