@@ -4,7 +4,7 @@ public class VendaRepository : ConexaoDapper
 {
     public VendaRepository(IConfiguration configuration) : base(configuration) { }
 
-    public async Task FinalizarVenda(Venda venda)
+    public async Task<int> FinalizarVenda(Venda venda)
     {
         var parameters = new
         {
@@ -41,6 +41,7 @@ public class VendaRepository : ConexaoDapper
             }
 
             transaction.Commit();
+            return idVenda; 
         }
         catch (Exception ex)
         {

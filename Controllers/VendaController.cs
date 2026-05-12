@@ -19,11 +19,10 @@ public class VendaController : ControllerBase
     {
         try
         {
-            await _vendaService.FinalizarVenda(venda);
+            var idVenda = await _vendaService.FinalizarVenda(venda);
             return Ok(new
             {
-                sucesso = true,
-                mensagem = "Venda Finalizada"
+                idVenda
             });
         }
         catch (Exception ex)

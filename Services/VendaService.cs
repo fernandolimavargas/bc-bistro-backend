@@ -11,9 +11,9 @@ public class VendaService
         _vendaRepository = vendaRepository;
     }
 
-    public async Task FinalizarVenda(Venda venda)
+    public async Task<int> FinalizarVenda(Venda venda)
     {
-        await _vendaRepository.FinalizarVenda(venda);
+        return await _vendaRepository.FinalizarVenda(venda);
     }
 
     public async Task<List<VendasHistoricos>> BuscarVendas(DateTime dataInicial, DateTime dataFinal)
