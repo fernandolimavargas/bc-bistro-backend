@@ -23,16 +23,19 @@ builder.Services.AddScoped<ConexaoDapper>();
 builder.Services.AddScoped<VendaController>();
 builder.Services.AddScoped<ProdutoController>();
 builder.Services.AddScoped<CatalogoController>();
+builder.Services.AddScoped<ImprimirController>(); 
 
 // Services
 builder.Services.AddScoped<VendaService>();
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CatalogoService>();
+builder.Services.AddScoped<ImprimirService>();
 
 // Repositories
 builder.Services.AddScoped<VendaRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<CatalogoRepository>();
+builder.Services.AddScoped<ImprimirController>();
 
 var app = builder.Build();
 
