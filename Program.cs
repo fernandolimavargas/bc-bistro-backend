@@ -35,7 +35,7 @@ builder.Services.AddScoped<ImprimirService>();
 builder.Services.AddScoped<VendaRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<CatalogoRepository>();
-builder.Services.AddScoped<ImprimirController>();
+builder.Services.AddScoped<ImprimirRepository>();
 
 var app = builder.Build();
 

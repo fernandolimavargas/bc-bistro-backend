@@ -28,4 +28,20 @@ public class ImprimirController : ControllerBase
             return BadRequest(ex.Message); 
         }
     }
+
+    [HttpPost("imprimir")]
+    public async Task<IActionResult> Imprimir([FromBody] ReimpressaoDTO imprimir)
+    {
+        try
+        {
+            //var dados = await _imprimirService.Imprimir(imprimir);
+            return Ok(new
+            {
+               // dados
+            }); 
+        } catch (Exception ex)
+        {
+            return BadRequest(ex.Message); 
+        }
+    }
 }
