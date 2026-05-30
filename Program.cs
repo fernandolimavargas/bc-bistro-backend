@@ -24,18 +24,21 @@ builder.Services.AddScoped<VendaController>();
 builder.Services.AddScoped<ProdutoController>();
 builder.Services.AddScoped<CatalogoController>();
 builder.Services.AddScoped<ImprimirController>(); 
+builder.Services.AddScoped<LoginController>();
 
 // Services
 builder.Services.AddScoped<VendaService>();
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CatalogoService>();
 builder.Services.AddScoped<ImprimirService>();
+builder.Services.AddScoped<LoginService>();
 
 // Repositories
 builder.Services.AddScoped<VendaRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<CatalogoRepository>();
 builder.Services.AddScoped<ImprimirRepository>();
+builder.Services.AddScoped<LoginRepository>();
 
 var app = builder.Build();
 
@@ -52,3 +55,7 @@ app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();
+
+internal class LoginController
+{
+}
