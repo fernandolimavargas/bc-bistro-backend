@@ -10,4 +10,9 @@ public class LoginService
     {
         return await _loginRepository.ValidarCredenciais(usuario, senha);
     }
+
+    public void CadastrarUsuario(string nome, string sobrenome, string usuario, string senha)
+    {
+        _loginRepository.CadastrarUsuario(nome, sobrenome, usuario, senha);
+    }
 }

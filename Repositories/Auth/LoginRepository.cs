@@ -19,6 +19,7 @@ public class LoginRepository : ConexaoDapper
     {
         var sql = @"
             SELECT
+                Id,
                 Nome,
                 Usuario
             FROM Usuarios
@@ -34,5 +35,22 @@ public class LoginRepository : ConexaoDapper
                 Usuario = usuario,
                 Senha = senha
             });
+    }
+
+    public void CadastrarUsuario(string nome, string sobrenome, string usuario, string senha)
+    {
+        var sql = @"
+            INSERT INTO Usuarios (Nome, Sobrenome, Usuario, Senha)
+            VALUES (@Nome, @Sobrenome, @Usuario, @Senha)";
+
+        var connection = CreateConnection();
+
+        connection.Execute(sql, new
+        {
+            Nome = nome,
+            Sobrenome = sobrenome,
+            Usuario = usuario,
+            Senha = senha
+        });
     }
 }
