@@ -90,7 +90,7 @@ public class VendaRepository : ConexaoDapper
                 ON p.nome = c.produto
             INNER JOIN inf_categorias ic
                 ON ic.id = p.categoria
-            ORDER BY v.hora_venda;";
+            ORDER BY v.hora_venda desc;";
 
         using var connection = CreateConnection();
 
