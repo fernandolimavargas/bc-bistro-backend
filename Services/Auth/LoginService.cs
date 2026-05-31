@@ -6,8 +6,8 @@ public class LoginService
         _loginRepository = loginRepository;
     }
 
-    public async Task<Usuario> ObterUsuarioPorEmail(string email)
+    public async Task<UsuarioLogin> ExecutarLogin(string usuario, string senha)
     {
-        return await _loginRepository.ObterUsuarioPorEmail(email);
+        return await _loginRepository.ValidarCredenciais(usuario, senha);
     }
 }

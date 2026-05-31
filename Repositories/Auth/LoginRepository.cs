@@ -12,4 +12,27 @@ public class LoginRepository : ConexaoDapper
         var connection = CreateConnection();
         return await connection.QueryFirstOrDefaultAsync<Usuario>(sql);
     }
+
+    public async Task<UsuarioLogin?> ValidarCredenciais(
+    string usuario,
+    string senha)
+    {
+        var sql = @"
+            SELECT
+                Nome,
+                Usuario
+            FROM Usuarios
+            WHERE Usuario = @Usuario
+            AND Senha = @Senha";
+
+        var connection = CreateConnection();
+
+        return await connection.QueryFirstOrDefaultAsync<UsuarioLogin>(
+            sql,
+            new
+            {
+                Usuario = usuario,
+                Senha = senha
+            });
+    }
 }
