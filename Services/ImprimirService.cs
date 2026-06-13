@@ -11,4 +11,14 @@ public class ImprimirService
     {
         return await _imprimirRepository.Reimprimir(idVenda); 
     }
+
+    public async Task<List<int>> PedidosPendentes()
+    {
+        return await _imprimirRepository.PedidosPendentes();
+    }
+
+    public async Task MarcarImpresso(int id)
+    {
+        await _imprimirRepository.MarcarImpresso(id);
+    }
 }

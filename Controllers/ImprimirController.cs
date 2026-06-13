@@ -44,4 +44,34 @@ public class ImprimirController : ControllerBase
             return BadRequest(ex.Message); 
         }
     }
+
+    [HttpGet("pendentes")]
+    public async Task<IActionResult> Pendentes()
+    {
+        try
+        {
+            var dados = await _imprimirService.PedidosPendentes();
+
+            return Ok(dados);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("marcar_impresso/{id}")]
+    public async Task<IActionResult> MarcarImpresso(int id)
+    {
+        try
+        {
+            await _imprimirService.MarcarImpresso(id);
+
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

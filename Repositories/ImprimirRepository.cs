@@ -30,4 +30,29 @@ public class ImprimirRepository : ConexaoDapper
         return resultado.ToList();
 
     }
+
+    public async Task<List<int>> PedidosPendentes()
+    {
+        var sql = @"
+            SELECT id
+            FROM vendas
+            WHERE impresso = false
+            ORDER BY id";
+
+        using var connection = CreateConnection();
+
+        return (await connection.QueryAsync<int>(sql)).ToList();
+    }
+
+    public async Task MarcarImpresso(int id)
+    {
+        var sql = @"
+            UPDATE vendas
+            SET impresso = true
+            WHERE id = @id";
+
+        using var connection = CreateConnection();
+
+        await connection.ExecuteAsync(sql, new { id });
+    }
 }
