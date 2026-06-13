@@ -12,7 +12,7 @@ public class CatalogoRepository : ConexaoDapper
 
         if (filtro > 0)
         {
-            where += "WHERE p.Categoria = @Categoria";
+            where += " and p.Categoria = @Categoria";
             parameters.Add("Categoria", filtro);
         }
         
@@ -28,8 +28,9 @@ public class CatalogoRepository : ConexaoDapper
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
                     on ic.id = p.categoria
+                WHERE p.disponivel = true
                 {where}
-                ORDER BY p.id";
+                ORDER BY p.Categoria, p.id";
 
         var connection = CreateConnection();
         return connection.Query<Catalogo>(sqlProdutos, parameters).ToList();

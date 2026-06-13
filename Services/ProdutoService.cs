@@ -23,4 +23,8 @@ public class ProdutoService
     {
         await _produtoRepository.AlterarProduto(produto); 
     }
+    public void AtivarInativarProduto(int idProduto, bool ativo)
+    {
+        _produtoRepository.AtivarInativarProduto(idProduto, ativo); 
+    }
 }

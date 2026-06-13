@@ -56,4 +56,17 @@ public class ProdutoController : ControllerBase
             return BadRequest(ex.Message); 
         }
     } 
+
+    [HttpPost("ativar_inativar")]
+    public IActionResult AtivarInativarProduto([FromQuery] int idProduto, bool ativo)
+    {
+        try
+        {
+            _produtoService.AtivarInativarProduto(idProduto, ativo); 
+            return Ok($"Produto {(ativo ? "Ativo" : "Desativado")}");
+        } catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

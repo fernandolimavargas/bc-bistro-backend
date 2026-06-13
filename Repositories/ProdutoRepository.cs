@@ -12,10 +12,12 @@ public class ProdutoRepository: ConexaoDapper
                 Nome as Produto, 
                 Preco, 
                 p.Categoria as IdCategoria,
-                ic.categoria as Categoria
+                ic.categoria as Categoria,
+                p.disponivel as Ativo
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
-                    on ic.id = p.categoria";
+                    on ic.id = p.categoria
+                order by p.id";
 
         var connection = CreateConnection();
         return connection.Query<Produtos>(sqlProdutos).ToList();
@@ -55,5 +57,15 @@ public class ProdutoRepository: ConexaoDapper
 
         var connection = CreateConnection();
         connection.Execute(sqlAlterarProduto, parameters);
+    }
+
+    public void AtivarInativarProduto(int idProduto, bool ativo)
+    {
+        var sql = @"UPDATE produtos SET 
+            disponivel = @ativo
+            WHERE id = @idProduto";
+
+        var connection = CreateConnection();
+        connection.Execute(sql, new {idProduto, ativo});
     }
 }
