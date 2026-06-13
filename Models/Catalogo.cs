@@ -6,5 +6,6 @@ public class Catalogo
     public int IdCategoria { get; set; }
     public string Categoria { get; set; }
     public bool Disponivel { get; set; }
+    public string? Descricao {get;set;}
 
 }

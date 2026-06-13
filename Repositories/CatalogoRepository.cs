@@ -24,7 +24,8 @@ public class CatalogoRepository : ConexaoDapper
                 Preco, 
                 p.Categoria as IdCategoria,
                 ic.categoria as Categoria,
-                p.Disponivel
+                p.disponivel,
+                p.descricao as Descricao
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
                     on ic.id = p.categoria
