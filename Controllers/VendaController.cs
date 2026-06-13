@@ -60,6 +60,17 @@ public class VendaController : ControllerBase
             });
         }
     }
+
+    [HttpGet("teste-impressao")]
+    public IActionResult TesteImpressao()
+    {
+        return Ok(new
+        {
+            id = 123,
+            produto = "X-Bacon",
+            quantidade = 2
+        });
+    }
     
 
 }
