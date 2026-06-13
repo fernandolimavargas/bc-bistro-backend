@@ -10,10 +10,11 @@ public class VendaRepository : ConexaoDapper
         {
             HoraVenda = venda.HoraVenda,
             Total = venda.Total,
-            IdUsuario = venda.IdUsuario
+            IdUsuario = venda.IdUsuario,
+            Observacao = venda.Observacao
         };
         var sqlVendas = @"
-        INSERT INTO vendas (hora_venda, total, id_usuario) VALUES (@HoraVenda, @Total, @IdUsuario) RETURNING id";
+        INSERT INTO vendas (hora_venda, total, id_usuario, observacao) VALUES (@HoraVenda, @Total, @IdUsuario, @Observacao) RETURNING id";
 
         var sqlComanda = @"INSERT INTO comandas (produto, quantidade, valor_unidade, valor_calculado, total, id_venda)
                             VALUES(@Produto, @Quantidade, @ValorUnidade, @ValorCalculado, @TotalVenda, @IdVenda)";

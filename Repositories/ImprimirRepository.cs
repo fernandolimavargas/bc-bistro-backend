@@ -12,7 +12,8 @@ public class ImprimirRepository : ConexaoDapper
             c.quantidade,
             c.produto,
             c.valor_calculado as ValorCalculado, 
-            v.total
+            v.total,
+            v.observacao
         from vendas v
         inner join comandas c
             on c.id_venda = v.id

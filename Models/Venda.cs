@@ -4,4 +4,5 @@ public class Venda
     public decimal Total { get; set; }
     public List<Comanda> Produtos { get; set; }
     public int IdUsuario { get; set; }
+    public string? Observacao {get;set;} 
 }

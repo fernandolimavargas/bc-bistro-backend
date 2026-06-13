@@ -11,4 +11,6 @@ public class ReimpressaoDTO
     public decimal ValorCalculado { get; set; }
 
     public decimal Total { get; set; }
+
+    public string? Observacao {get;set;}
 }
