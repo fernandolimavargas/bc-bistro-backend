@@ -63,8 +63,8 @@ public class VendaRepository : ConexaoDapper
                     hora_venda AT TIME ZONE 'America/Sao_Paulo'
                     AS DATE
                 )
-                BETWEEN CAST('2026-06-13' AS DATE)
-                    AND CAST('2026-06-13' AS DATE)
+                BETWEEN CAST(@dataInicial AS DATE)
+                    AND CAST(@dataFinal AS DATE)
             ),
 
             vendas_com_total AS (
