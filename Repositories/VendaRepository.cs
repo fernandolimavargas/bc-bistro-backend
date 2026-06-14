@@ -59,8 +59,12 @@ public class VendaRepository : ConexaoDapper
             WITH vendas_filtradas AS (
                 SELECT *
                 FROM vendas
-                WHERE CAST(hora_venda AS DATE)
-                    BETWEEN @dataInicial AND @dataFinal
+                WHERE CAST(
+                    hora_venda AT TIME ZONE 'America/Sao_Paulo'
+                    AS DATE
+                )
+                BETWEEN CAST('2026-06-13' AS DATE)
+                    AND CAST('2026-06-13' AS DATE)
             ),
 
             vendas_com_total AS (
@@ -69,7 +73,10 @@ public class VendaRepository : ConexaoDapper
                     hora_venda,
                     total,
                     SUM(total) OVER (
-                        PARTITION BY CAST(hora_venda AS DATE)
+                        PARTITION BY CAST(
+                            hora_venda AT TIME ZONE 'America/Sao_Paulo'
+                            AS DATE
+                        )
                     ) AS totalDoDia
                 FROM vendas_filtradas
             )
@@ -79,19 +86,27 @@ public class VendaRepository : ConexaoDapper
                 c.produto,
                 ic.categoria,
                 c.quantidade,
-                c.valor_unidade as valorUnidade,
-                c.valor_calculado as valorCalculado,
-                v.hora_venda as horaVenda,
-                v.total as TotalVenda,
+                c.valor_unidade AS valorUnidade,
+                c.valor_calculado AS valorCalculado,
+
+                v.hora_venda AT TIME ZONE 'America/Sao_Paulo' AS horaVenda,
+
+                v.total AS TotalVenda,
                 v.totalDoDia
+
             FROM vendas_com_total v
-            INNER JOIN comandas c 
+
+            INNER JOIN comandas c
                 ON c.id_venda = v.id
-            INNER JOIN produtos p 
+
+            INNER JOIN produtos p
                 ON p.nome = c.produto
+
             INNER JOIN inf_categorias ic
                 ON ic.id = p.categoria
-            ORDER BY v.hora_venda desc;";
+
+            ORDER BY
+                v.hora_venda DESC;";
 
         using var connection = CreateConnection();
 
