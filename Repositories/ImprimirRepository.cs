@@ -9,7 +9,7 @@ public class ImprimirRepository : ConexaoDapper
         var sql = @"
             UPDATE vendas
             SET impresso = false
-            WHERE id = @id";
+            WHERE id = @idVenda";
 
         using var connection = CreateConnection();
             
