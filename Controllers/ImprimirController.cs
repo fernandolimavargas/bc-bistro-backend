@@ -13,12 +13,12 @@ public class ImprimirController : ControllerBase
         _imprimirService = imprimirService;
     }
 
-    [HttpGet("reimprimir/{idVenda:int}")] 
-    public async Task<IActionResult> Reimprimir([FromRoute] int idVenda)
+    [HttpGet("visualizar_comanda/{idVenda:int}")] 
+    public async Task<IActionResult> VisualizarComanda([FromRoute] int idVenda)
     {
         try
         {
-            var dados = await _imprimirService.Reimprimir(idVenda);
+            var dados = await _imprimirService.VisualizarComanda(idVenda);
             return Ok(new
             {
                 dados
@@ -72,6 +72,19 @@ public class ImprimirController : ControllerBase
         catch(Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("reimprimir/{idVenda:int}")] 
+    public async Task<IActionResult> Reimprimir([FromRoute] int idVenda)
+    {
+        try
+        {
+            await _imprimirService.Reimprimir(idVenda); 
+            return Ok(true); 
+        } catch (Exception)
+        {
+            return BadRequest(false); 
         }
     }
 }
