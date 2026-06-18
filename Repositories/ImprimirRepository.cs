@@ -4,31 +4,36 @@ public class ImprimirRepository : ConexaoDapper
 {
     public ImprimirRepository(IConfiguration configuration) : base(configuration) { }
 
-    public async Task<List<ReimpressaoDTO>> Reimprimir(int idVenda)
+    public async Task Reimprimir(int idVenda)
     {
-        var sqlReimprimir = @"select 
-            v.id, 
-            v.hora_venda as HoraVenda, 
-            c.quantidade,
-            c.produto,
-            c.valor_calculado as ValorCalculado, 
-            v.total,
-            v.observacao
-        from vendas v
-        inner join comandas c
-            on c.id_venda = v.id
-        where v.id = @idVenda";
-
+        var sql = @"
+            UPDATE vendas
+            SET impresso = false
+            WHERE id = @id";
 
         using var connection = CreateConnection();
+            
+        connection.Execute(sql, new { idVenda });
+    }
 
-        var resultado = await connection.QueryAsync<ReimpressaoDTO>(
-        sqlReimprimir,
-        new { idVenda }
-        );
+    public async Task<List<ReimpressaoDTO>> VisualizarComanda(int idVenda)
+    {
+        var sql = @"select 
+                v.id, 
+                v.hora_venda as HoraVenda, 
+                c.quantidade,
+                c.produto,
+                c.valor_calculado as ValorCalculado, 
+                v.total,
+                v.observacao
+            from vendas v
+            inner join comandas c
+                on c.id_venda = v.id
+            where v.id = @idVenda";
 
-        return resultado.ToList();
+        using var connection = CreateConnection(); 
 
+        return connection.Query<ReimpressaoDTO>(sql, new {idVenda}).ToList();
     }
 
     public async Task<List<int>> PedidosPendentes()
