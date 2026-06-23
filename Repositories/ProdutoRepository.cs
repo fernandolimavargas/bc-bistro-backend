@@ -13,7 +13,8 @@ public class ProdutoRepository: ConexaoDapper
                 Preco, 
                 p.Categoria as IdCategoria,
                 ic.categoria as Categoria,
-                p.disponivel as Ativo
+                p.disponivel as Ativo,
+                p.descricao as Descricao
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
                     on ic.id = p.categoria
@@ -29,11 +30,12 @@ public class ProdutoRepository: ConexaoDapper
         {
             Produto = produto.Produto,
             Preco = produto.Preco,
-            Categoria = produto.IdCategoria
+            Categoria = produto.IdCategoria, 
+            Descricao = produto.Descricao
 
         };
-        var sqlProduto = @"INSERT INTO produtos (nome, preco, categoria) 
-            VALUES (@Produto, @Preco, @Categoria)";
+        var sqlProduto = @"INSERT INTO produtos (nome, preco, categoria, disponivel, descricao) 
+            VALUES (@Produto, @Preco, @Categoria, true, @Descricao)";
 
         var connection = CreateConnection();
         connection.Execute(sqlProduto, parameters);
@@ -46,13 +48,15 @@ public class ProdutoRepository: ConexaoDapper
             IdProduto = produto.Id,
             Produto = produto.Produto,
             Preco = produto.Preco,
-            Categoria = produto.IdCategoria
+            Categoria = produto.IdCategoria, 
+            Descricao = produto.Descricao
         };
 
         var sqlAlterarProduto = @"UPDATE produtos SET
                             nome = @Produto, 
                             preco = @Preco,
                             categoria = @Categoria
+                            descricao = @Descricao
                             where id = @IdProduto";
 
         var connection = CreateConnection();
