@@ -55,9 +55,8 @@ public class ProdutoRepository: ConexaoDapper
         var sqlAlterarProduto = @"UPDATE produtos SET
                             nome = @Produto, 
                             preco = @Preco,
-                            categoria = @Categoria
-                            descricao = @Descricao
-                            where id = @IdProduto";
+                            categoria = @Categoria,
+                            descricao = @Descricao where id = @IdProduto";
 
         var connection = CreateConnection();
         connection.Execute(sqlAlterarProduto, parameters);
