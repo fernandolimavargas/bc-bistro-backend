@@ -25,7 +25,8 @@ public class CatalogoRepository : ConexaoDapper
                 p.Categoria as IdCategoria,
                 ic.categoria as Categoria,
                 p.disponivel,
-                p.descricao as Descricao
+                p.descricao as Descricao,
+                p.quantidade_stock as QuantidadeStock
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
                     on ic.id = p.categoria

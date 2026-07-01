@@ -7,5 +7,6 @@ public class Catalogo
     public string Categoria { get; set; }
     public bool Disponivel { get; set; }
     public string? Descricao {get;set;}
+    public int QuantidadeStock {get;set; }
 
 }

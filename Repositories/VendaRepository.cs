@@ -1,4 +1,8 @@
+using System.Data;
 using Dapper;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 public class VendaRepository : ConexaoDapper
 {
@@ -40,6 +44,8 @@ public class VendaRepository : ConexaoDapper
                 };
 
                 await connection.ExecuteAsync(sqlComanda, parametersComanda, transaction: transaction);
+
+                RetirarQtdStock(produto.Id, produto.Quantidade, connection, transaction); 
             }
 
             transaction.Commit();
@@ -137,5 +143,57 @@ public class VendaRepository : ConexaoDapper
                 }).ToList()
             })
             .ToList();
+    }
+
+    public bool RetirarQtdStock(int id, int qtd, System.Data.IDbConnection connection, IDbTransaction transaction)
+    {
+        var sql = @"
+            UPDATE produtos
+            SET quantidade_stock = quantidade_stock - @QtdProdutos
+            WHERE id = @Id
+            AND quantidade_stock >= @QtdProdutos";
+
+        var parameters = new
+        {
+            Id = id,
+            QtdProdutos = qtd
+        };
+
+        var linhasAfetadas = connection.Execute(sql, parameters, transaction: transaction);
+
+        if (linhasAfetadas == 0)
+        {
+            return false; 
+        }
+
+        var quantidadeRestante = connection.QuerySingle<int>(
+        @"SELECT quantidade_stock
+          FROM produtos
+          WHERE id = @Id",
+        new { Id = id },
+        transaction);
+
+        if (quantidadeRestante == 0)
+        {
+            DesativarProduto(id, connection, transaction);
+        }
+
+        return true;
+    }
+
+        public void DesativarProduto(
+        int id,
+        IDbConnection connection,
+        IDbTransaction transaction)
+    {
+        var sql = @"
+            UPDATE produtos
+            SET disponivel = false
+            WHERE id = @Id";
+
+        connection.Execute(sql, new
+        {
+            Id = id
+        }, transaction);
     }
 }

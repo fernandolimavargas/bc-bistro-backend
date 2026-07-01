@@ -426,4 +426,6 @@ public class VendaService
             StyleIndex = styleIndex
         };
     }
+
+    
 }
