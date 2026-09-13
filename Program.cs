@@ -1,3 +1,5 @@
+using BCBistroAPI.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,13 +8,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173",
+                "https://localhost:7151"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 builder.Services.AddControllers();
@@ -40,11 +46,14 @@ builder.Services.AddScoped<CatalogoRepository>();
 builder.Services.AddScoped<ImprimirRepository>();
 builder.Services.AddScoped<LoginRepository>();
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
+
 
 // IMPORTANTE:
 // removido UseHttpsRedirection para evitar problemas
@@ -53,6 +62,7 @@ app.UseSwaggerUI();
 app.UseCors("AllowAll");
 
 app.MapControllers();
+app.MapHub<EstoqueHub>("/estoqueHub");
 
 app.Run();
 

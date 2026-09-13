@@ -8,7 +8,7 @@ public class VendaRepository : ConexaoDapper
 {
     public VendaRepository(IConfiguration configuration) : base(configuration) { }
 
-    public async Task<int> FinalizarVenda(Venda venda)
+    public async Task<ResultadoFinalizacaoVenda> FinalizarVenda(Venda venda)
     {
         var parameters = new
         {
@@ -28,8 +28,13 @@ public class VendaRepository : ConexaoDapper
         var transaction = connection.BeginTransaction();
         try
         {
+            var idVenda = await connection.ExecuteScalarAsync<int>(
+                sqlVendas,
+                parameters,
+                transaction
+            );
 
-            var idVenda = await connection.ExecuteScalarAsync<int>(sqlVendas, parameters, transaction: transaction);
+            var estoquesAtualizados = new List<AtualizacaoEstoque>();
 
             foreach (var produto in venda.Produtos)
             {
@@ -43,13 +48,42 @@ public class VendaRepository : ConexaoDapper
                     IdVenda = idVenda
                 };
 
-                await connection.ExecuteAsync(sqlComanda, parametersComanda, transaction: transaction);
+                // Insere o item da venda
+                await connection.ExecuteAsync(
+                    sqlComanda,
+                    parametersComanda,
+                    transaction
+                );
 
-                RetirarQtdStock(produto.Id, produto.Quantidade, connection, transaction); 
+                // Retira do estoque
+                var quantidadeRestante = await RetirarQtdStock(
+                    produto.Id,
+                    produto.Quantidade,
+                    connection,
+                    transaction
+                );
+
+                if (quantidadeRestante == null)
+                {
+                    throw new Exception(
+                        $"Estoque insuficiente para o produto: {produto.Produto}"
+                    );
+                }
+
+                estoquesAtualizados.Add(new AtualizacaoEstoque
+                {
+                    IdProduto = produto.Id,
+                    QuantidadeStock = quantidadeRestante.Value,
+                    Disponivel = quantidadeRestante.Value > 0
+                });
             }
-
             transaction.Commit();
-            return idVenda; 
+            
+            return new ResultadoFinalizacaoVenda
+            {
+                IdVenda = idVenda,
+                Estoques = estoquesAtualizados
+            };
         }
         catch (Exception ex)
         {
@@ -145,55 +179,47 @@ public class VendaRepository : ConexaoDapper
             .ToList();
     }
 
-    public bool RetirarQtdStock(int id, int qtd, System.Data.IDbConnection connection, IDbTransaction transaction)
+    public async Task<int?> RetirarQtdStock( int id, int qtd, IDbConnection connection, IDbTransaction transaction)
     {
-        var sql = @"
+        if (qtd <= 0)
+            return null;
+
+        const string sql = @"
             UPDATE produtos
-            SET quantidade_stock = quantidade_stock - @QtdProdutos
+            SET
+                quantidade_stock = quantidade_stock - @Qtd,
+                disponivel = CASE
+                    WHEN quantidade_stock - @Qtd = 0 THEN false
+                    ELSE disponivel
+                END
             WHERE id = @Id
-            AND quantidade_stock >= @QtdProdutos";
+            AND quantidade_stock >= @Qtd
+            RETURNING quantidade_stock;
+        ";
 
-        var parameters = new
-        {
-            Id = id,
-            QtdProdutos = qtd
-        };
-
-        var linhasAfetadas = connection.Execute(sql, parameters, transaction: transaction);
-
-        if (linhasAfetadas == 0)
-        {
-            return false; 
-        }
-
-        var quantidadeRestante = connection.QuerySingle<int>(
-        @"SELECT quantidade_stock
-          FROM produtos
-          WHERE id = @Id",
-        new { Id = id },
-        transaction);
-
-        if (quantidadeRestante == 0)
-        {
-            DesativarProduto(id, connection, transaction);
-        }
-
-        return true;
+        return await connection.QuerySingleOrDefaultAsync<int?>(
+            sql,
+            new
+            {
+                Id = id,
+                Qtd = qtd
+            },
+            transaction
+        );
     }
 
-        public void DesativarProduto(
-        int id,
-        IDbConnection connection,
-        IDbTransaction transaction)
+    public async Task<int> BuscarQuantidadeEstoque(int id)
     {
-        var sql = @"
-            UPDATE produtos
-            SET disponivel = false
+        const string sql = @"
+            SELECT quantidade_stock
+            FROM produtos
             WHERE id = @Id";
 
-        connection.Execute(sql, new
-        {
-            Id = id
-        }, transaction);
+        using var connection = CreateConnection();
+
+        return await connection.QuerySingleOrDefaultAsync<int>(
+            sql,
+            new { Id = id }
+        );
     }
 }

@@ -1,19 +1,32 @@
+using BCBistroAPI.Hubs;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.SignalR;
 
 public class VendaService
 {
     private readonly VendaRepository _vendaRepository;
+    private readonly IHubContext<EstoqueHub> _estoqueHub;
 
-    public VendaService(VendaRepository vendaRepository)
+    public VendaService(VendaRepository vendaRepository, IHubContext<EstoqueHub> estoqueHub)
     {
         _vendaRepository = vendaRepository;
+        _estoqueHub = estoqueHub;
     }
 
     public async Task<int> FinalizarVenda(Venda venda)
     {
-        return await _vendaRepository.FinalizarVenda(venda);
+        var resultado = await _vendaRepository.FinalizarVenda(venda);
+        foreach (var estoque in resultado.Estoques)
+        {
+            await _estoqueHub.Clients.All.SendAsync(
+                "EstoqueAtualizado",
+                estoque
+            );
+        }
+
+        return resultado.IdVenda;
     }
 
     public async Task<List<VendasHistoricos>> BuscarVendas(DateTime dataInicial, DateTime dataFinal)
@@ -427,5 +440,8 @@ public class VendaService
         };
     }
 
-    
+    public async Task<int> BuscarQuantidadeEstoque(int id)
+    {
+       return await _vendaRepository.BuscarQuantidadeEstoque(id);
+    }
 }

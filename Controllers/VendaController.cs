@@ -71,7 +71,27 @@ public class VendaController : ControllerBase
             quantidade = 2
         });
     }
-    
+
+    [HttpGet("buscar-quantidade-estoque")]
+    public async Task<IActionResult> BuscarQuantidadeEstoque([FromQuery] int id)
+    {
+        try
+        {
+            var quantidade = await _vendaService.BuscarQuantidadeEstoque(id);
+            return Ok(new
+            {
+                sucesso = true,
+                quantidade
+            });
+        } catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                sucesso = false,
+                mensagem = ex.Message
+            });
+        }
+    }
 
 }
 
