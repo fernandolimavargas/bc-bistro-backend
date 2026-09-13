@@ -93,7 +93,9 @@ public class VendaRepository : ConexaoDapper
         }
     }
     
-    public async Task<List<VendasHistoricos>> BuscarVendas(DateTime dataInicial, DateTime dataFinal)
+    public async Task<List<VendasHistoricos>> BuscarVendas(
+    DateTime dataInicial,
+    DateTime dataFinal)
     {
         var sql = @"
             WITH vendas_filtradas AS (
@@ -106,7 +108,6 @@ public class VendaRepository : ConexaoDapper
                 BETWEEN CAST(@dataInicial AS DATE)
                     AND CAST(@dataFinal AS DATE)
             ),
-
             vendas_com_total AS (
                 SELECT 
                     id,
@@ -128,10 +129,8 @@ public class VendaRepository : ConexaoDapper
                 c.quantidade,
                 c.valor_unidade AS valorUnidade,
                 c.valor_calculado AS valorCalculado,
-
                 v.hora_venda AT TIME ZONE 'America/Sao_Paulo' AS horaVenda,
-
-                v.total AS TotalVenda,
+                v.total AS totalVenda,
                 v.totalDoDia
 
             FROM vendas_com_total v
@@ -146,7 +145,8 @@ public class VendaRepository : ConexaoDapper
                 ON ic.id = p.categoria
 
             ORDER BY
-                v.hora_venda DESC;";
+                v.hora_venda DESC;
+        ";
 
         using var connection = CreateConnection();
 
@@ -167,14 +167,22 @@ public class VendaRepository : ConexaoDapper
                 TotalVenda = s.First().TotalVenda,
                 TotalDoDia = s.First().TotalDoDia,
 
-                ProdutosVendidos = s.Select(p => new ProdutosVendidos
-                {
-                    Produto = p.Produto,
-                    Categoria = p.Categoria,
-                    ValorUnidade = p.ValorUnidade,
-                    Quantidade = p.Quantidade,
-                    ValorCalculado = p.ValorCalculado
-                }).ToList()
+                ProdutosVendidos = s
+                    .GroupBy(p => new
+                    {
+                        p.Produto,
+                        p.Categoria,
+                        p.ValorUnidade
+                    })
+                    .Select(p => new ProdutosVendidos
+                    {
+                        Produto = p.Key.Produto,
+                        Categoria = p.Key.Categoria,
+                        ValorUnidade = p.Key.ValorUnidade,
+                        Quantidade = p.Sum(x => x.Quantidade),
+                        ValorCalculado = p.Sum(x => x.ValorCalculado)
+                    })
+                    .ToList()
             })
             .ToList();
     }
