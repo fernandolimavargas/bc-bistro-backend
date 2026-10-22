@@ -5,4 +5,5 @@ public class Venda
     public List<Comanda> Produtos { get; set; }
     public int IdUsuario { get; set; }
     public string? Observacao {get;set;} 
+    public bool Imprimir {get;set;}
 }
