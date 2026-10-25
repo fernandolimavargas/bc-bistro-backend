@@ -19,9 +19,9 @@ public class ProdutoService
         await _produtoRepository.AdicionarProduto(produto);
     }
     
-    public async Task AlterarProduto(Produtos produto)
+    public void AlterarProduto(Produtos produto)
     {
-        await _produtoRepository.AlterarProduto(produto); 
+        _produtoRepository.AlterarProduto(produto); 
     }
     public void AtivarInativarProduto(int idProduto, bool ativo)
     {

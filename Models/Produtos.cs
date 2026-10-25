@@ -7,4 +7,5 @@ public class Produtos
     public string Categoria { get; set; }
     public bool Ativo {get;set;}
     public string Descricao {get;set;}
+    public int QuantidadeStock {get;set;}
 }

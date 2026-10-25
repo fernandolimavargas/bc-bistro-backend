@@ -14,7 +14,8 @@ public class ProdutoRepository: ConexaoDapper
                 p.Categoria as IdCategoria,
                 ic.categoria as Categoria,
                 p.disponivel as Ativo,
-                p.descricao as Descricao
+                p.descricao as Descricao,
+                p.quantidade_stock as QuantidadeStock
                 FROM produtos p 
                 INNER JOIN inf_categorias ic
                     on ic.id = p.categoria
@@ -41,7 +42,7 @@ public class ProdutoRepository: ConexaoDapper
         connection.Execute(sqlProduto, parameters);
     }
     
-    public async Task AlterarProduto(Produtos produto)
+    public void AlterarProduto(Produtos produto)
     {
         var parameters = new
         {
@@ -49,14 +50,19 @@ public class ProdutoRepository: ConexaoDapper
             Produto = produto.Produto,
             Preco = produto.Preco,
             Categoria = produto.IdCategoria, 
-            Descricao = produto.Descricao
+            Descricao = produto.Descricao,
+            QuantidadeStock = produto.QuantidadeStock,
+            Ativo = produto.Ativo
         };
 
         var sqlAlterarProduto = @"UPDATE produtos SET
                             nome = @Produto, 
                             preco = @Preco,
                             categoria = @Categoria,
-                            descricao = @Descricao where id = @IdProduto";
+                            quantidade_stock = @QuantidadeStock,
+                            disponivel = @Ativo,
+                            descricao = @Descricao
+                            WHERE id = @IdProduto";
 
         var connection = CreateConnection();
         connection.Execute(sqlAlterarProduto, parameters);

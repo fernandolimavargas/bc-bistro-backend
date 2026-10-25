@@ -45,7 +45,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPost("alterar_produto")]
-    public IActionResult AlterarProduto(Produtos produtos)
+    public IActionResult AlterarProduto([FromBody] Produtos produtos)
     {
         try
         {
