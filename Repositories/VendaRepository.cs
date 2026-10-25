@@ -16,7 +16,7 @@ public class VendaRepository : ConexaoDapper
             Total = venda.Total,
             IdUsuario = venda.IdUsuario,
             Observacao = venda.Observacao,
-            Impresso = venda.Imprimir
+            Impresso = venda.Imprimir ? false : true
         };
         var sqlVendas = @"
         INSERT INTO vendas (hora_venda, total, id_usuario, observacao, impresso) VALUES (@HoraVenda, @Total, @IdUsuario, @Observacao, @Impresso) RETURNING id";
