@@ -37,4 +37,19 @@ public class CatalogoRepository : ConexaoDapper
         var connection = CreateConnection();
         return connection.Query<Catalogo>(sqlProdutos, parameters).ToList();
     }
+
+    public List<CondicoesPagamento> MostrarCondicoesPagamento()
+    {
+        var sqlCondicoesPagamento = @"
+            SELECT 
+                id, 
+                condicao as Condicao, 
+                ativo as Ativo
+            FROM condicoes_pagamento
+            WHERE ativo = true
+            ORDER BY id";
+
+        var connection = CreateConnection();
+        return connection.Query<CondicoesPagamento>(sqlCondicoesPagamento).ToList();
+    }
 }

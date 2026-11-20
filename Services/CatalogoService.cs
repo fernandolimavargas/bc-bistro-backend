@@ -11,4 +11,9 @@ public class CatalogoService
     {
         return _catalogoRepository.MostrarCatalogo(filtro); 
     }
+
+    public List<CondicoesPagamento> MostrarCondicoesPagamento()
+    {
+        return _catalogoRepository.MostrarCondicoesPagamento();
+    }
 }

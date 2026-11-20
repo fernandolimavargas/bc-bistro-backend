@@ -24,4 +24,16 @@ public class CatalogoController: ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("mostrar_condicoes_pagamento")]
+    public IActionResult MostrarCondicoesPagamento()
+    {
+        try
+        {
+            return Ok(_catalogoService.MostrarCondicoesPagamento());
+        } catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
