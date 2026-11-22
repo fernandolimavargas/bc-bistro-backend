@@ -45,11 +45,48 @@ public class CatalogoRepository : ConexaoDapper
                 id, 
                 condicao as Condicao, 
                 ativo as Ativo
-            FROM condicoes_pagamento
+            FROM metodos_pagamento
             WHERE ativo = true
             ORDER BY id";
 
         var connection = CreateConnection();
         return connection.Query<CondicoesPagamento>(sqlCondicoesPagamento).ToList();
+    }
+
+    public void AdicionarCondicaoPagamento(CondicoesPagamento condicaoPagamento)
+    {
+        var sql = @" INSERT INTO metodos_pagamento (condicao, ativo) 
+            VALUES (@Condicao, @Ativo)";
+
+        using var connection = CreateConnection();
+        connection.Execute(sql, new { Condicao = condicaoPagamento.Condicao, Ativo = condicaoPagamento.Ativo });
+    }
+
+    public void RemoverCondicaoPagamento(int id)
+    {
+        var sql = @" DELETE FROM metodos_pagamento WHERE id = @Id";
+
+        using var connection = CreateConnection();
+        connection.Execute(sql, new { Id = id });
+    }
+
+    public void AlterarCondicaoPagamento(CondicoesPagamento condicaoPagamento)
+    {
+        var sql = @" UPDATE metodos_pagamento 
+                        SET condicao = @Condicao
+                    WHERE id = @Id";
+
+        using var connection = CreateConnection();
+        connection.Execute(sql, new { Condicao = condicaoPagamento.Condicao, Id = condicaoPagamento.Id });
+    }
+
+    public void AtivarInativarCondicaoPagamento(int id, bool ativo)
+    {
+        var sql = @" UPDATE metodos_pagamento 
+                        SET ativo = @Ativo
+                    WHERE id = @Id";
+
+        using var connection = CreateConnection();
+        connection.Execute(sql, new { Ativo = ativo, Id = id });
     }
 }

@@ -16,4 +16,29 @@ public class CatalogoService
     {
         return _catalogoRepository.MostrarCondicoesPagamento();
     }
+
+    public void AdicionarCondicaoPagamento(CondicoesPagamento condicaoPagamento)
+    {
+        if (string.IsNullOrWhiteSpace(condicaoPagamento.Condicao))
+        {
+            throw new ArgumentException("A condição de pagamento não pode ser vazia.");
+        }
+
+        _catalogoRepository.AdicionarCondicaoPagamento(condicaoPagamento);
+    }
+
+    public void RemoverCondicaoPagamento(int id)
+    {
+        _catalogoRepository.RemoverCondicaoPagamento(id);
+    }
+
+    public void AlterarCondicaoPagamento(CondicoesPagamento condicaoPagamento)
+    {
+        _catalogoRepository.AlterarCondicaoPagamento(condicaoPagamento);
+    }
+
+    public void AtivarInativarCondicaoPagamento(int id, bool ativo)
+    {
+        _catalogoRepository.AtivarInativarCondicaoPagamento(id, ativo);
+    }
 }

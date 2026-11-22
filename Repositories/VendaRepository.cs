@@ -16,10 +16,11 @@ public class VendaRepository : ConexaoDapper
             Total = venda.Total,
             IdUsuario = venda.IdUsuario,
             Observacao = venda.Observacao,
-            Impresso = venda.Imprimir ? false : true
+            Impresso = venda.Imprimir ? false : true, 
+            IdCondicaoPagamento = venda.IdCondicaoPagamento
         };
         var sqlVendas = @"
-        INSERT INTO vendas (hora_venda, total, id_usuario, observacao, impresso) VALUES (@HoraVenda, @Total, @IdUsuario, @Observacao, @Impresso) RETURNING id";
+        INSERT INTO vendas (hora_venda, total, id_usuario, observacao, impresso, id_condicao_pagamento) VALUES (@HoraVenda, @Total, @IdUsuario, @Observacao, @Impresso, @IdCondicaoPagamento) RETURNING id";
 
         var sqlComanda = @"INSERT INTO comandas (produto, quantidade, valor_unidade, valor_calculado, total, id_venda)
                             VALUES(@Produto, @Quantidade, @ValorUnidade, @ValorCalculado, @TotalVenda, @IdVenda)";
@@ -88,8 +89,8 @@ public class VendaRepository : ConexaoDapper
         }
         catch (Exception ex)
         {
-            transaction.Rollback();
             Console.WriteLine(ex.Message);
+            transaction.Rollback();
             throw;
         }
     }
